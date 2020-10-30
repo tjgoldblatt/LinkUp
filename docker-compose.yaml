@@ -22,20 +22,21 @@ services:
         expose:
             #not sure about this, could be 8080, or dupes not allowed?
             - 8181
-        # Not sure if this is required, solved an error so I think it is
-        depends_on: 
-            - mongodb
 
     mongodb:
         build: ./mongodb
         container_name: mongo
+		restart: always
         # HOST_PORT:CONTAINER_PORT
+		volumes:
+			- ./mongodb/data
         ports:
-            - "27017:27017"
-        # environment:
-        #     - MONGO_INITDB_DATABASE=
+            - '27017:27017'
+        environment:
+        #    - MONGO_INITDB_DATABASE= '.\mongodb\init_sctipt.py'
         #     - MONGO_INITDB_ROOT_USERNAME=
         #     - MONGO_INITDB_PASSWORD=
+		# run:
 
     nginx:
         build: ./nginx
@@ -45,7 +46,6 @@ services:
             - "80:80"
         depends_on:
             - ui
-            - mongodb
 
     ui:
         build: ./linkup-ui
